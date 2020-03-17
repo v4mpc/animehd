@@ -57,7 +57,15 @@ def check_exist(user_path):
 def create_dir(dir_name):
     return os.mkdir(get_video_folder+dir_name)
 
-
+def get_servers(html,resolution_key):
+    ul_tag=parse_html(html,'z-movie-server')
+    li_list=ul_tag.find_all('li')
+    dict_of_servers={}
+    for li in li_list:
+        server_name=li['class'][0]
+        links=li.find_all('a')
+        dict_of_servers[server_name]=[f'{link["href"]}/download/{resolution[resolution_key]}' for link in links]
+    return dict_of_servers
 
 def parse_html(html,id):
     soup = bs4.BeautifulSoup(html,'lxml')
@@ -66,20 +74,19 @@ def parse_html(html,id):
 def send_request(url):
     return s.get(url,headers=headers)
 
-def download(link):
-    with open(file_name, "wb") as f:
+def download(link,file_name):
+    with open(get_video_folder()+file_name, "wb") as f:
             response = requests.get(link, stream=True)
             total_length = response.headers.get('content-length')
-
             if total_length: # no content length header
                 dl = 0
                 total_length = int(total_length)
                 for data in response.iter_content(chunk_size=chunk_size):
                     dl += len(data)
-                    f.write(data)
-                    # sys.stdout.write("\r[%s%s]" % ('=' * done, ' ' * (50-done)) )   
+                    f.write(data)   
                     print(f'{to_mb(dl)} of {to_mb(total_length)}')
                     sys.stdout.flush()
+
 
 if __name__ == "__main__":
     # sample_url="https://animehd47.com/naruto-dub/s1-m1/"
@@ -88,13 +95,8 @@ if __name__ == "__main__":
     # web_queue=[]
     # with open('Naruto (Dub) - Animehd47.com.html') as f:
     #     resp=f.read()
-    # ul_tag=parse_html(resp,'z-movie-server')
-    # li_list=ul_tag.find_all('li')
-    # for li in li_list:
-    #     links=li.find_all('a')
-    #     for link in links:
-    #         href=f'{link["href"]}/download/{resolution['720']}'
-    #         web_queue.append(href)
+    # dict_of_servers=get_servers(resp,'720')
+    # print(dict_of_servers)
             
 
     # send request to get the download link
@@ -120,7 +122,27 @@ if __name__ == "__main__":
 
     resp = send_request(user_url)
     if resp.status_code == requests.codes.ok:
-        pass
+        dict_of_servers=get_servers(resp.text,user_resolution)
+        # lets check what the user wants
+        server_name,links_to_download=dict_of_servers.popitem()
+        if user_download=='ALL':
+            # download from the first server
+            # TODO: if fail try the rest before giving up
+
+            for link in links_to_download:
+                result=send_request(link)
+                if result.status_code == requests.codes.ok:
+                    download_link=get_download_link(result.text)
+                    download(download_link,generate_name(link,2))
+        else:
+            print('Downloading One file')
+            result=send_request(links_to_download[0])
+            if result.status_code==requests.codes.ok:
+                # print(result.text)
+                download_link=get_download_link(result.text)
+                download(download_link,generate_name(links_to_download[0],2))
+            # download from the first server
+            # TODO: if fail try the rest before giving up
     else:
         print('Http Error Code: '+resp.status_code)
 
