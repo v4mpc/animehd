@@ -8,6 +8,7 @@ import bs4
 import re
 import os
 from urllib.parse import urlparse
+import argparse
 
 
 
@@ -15,7 +16,7 @@ from urllib.parse import urlparse
 
 chunk_size=4096
 
-resolution_list=['360p-0','480p-1','720p-2']
+resolution={'360':'360p-0','480':'480p-1','720':'720p-2'}
 # destination_folder=
 
 download_type={
@@ -84,30 +85,49 @@ if __name__ == "__main__":
     # sample_url="https://animehd47.com/naruto-dub/s1-m1/"
     s = requests.Session() 
     # resp=s.get(sample_url,headers=headers)
-    web_queue=[]
-    with open('Naruto (Dub) - Animehd47.com.html') as f:
-        resp=f.read()
-        # print(resp)
-    ul_tag=parse_html(resp,'z-movie-server')
-    li_list=ul_tag.find_all('li')
-    for li in li_list:
-        links=li.find_all('a')
-        for link in links:
-            href=f'{link["href"]}/download/{resolution_list[1]}'
-            web_queue.append(href)
-            # print(f'{link["href"]}/download/{resolution_list[1]}')
+    # web_queue=[]
+    # with open('Naruto (Dub) - Animehd47.com.html') as f:
+    #     resp=f.read()
+    # ul_tag=parse_html(resp,'z-movie-server')
+    # li_list=ul_tag.find_all('li')
+    # for li in li_list:
+    #     links=li.find_all('a')
+    #     for link in links:
+    #         href=f'{link["href"]}/download/{resolution['720']}'
+    #         web_queue.append(href)
+            
 
     # send request to get the download link
-    resp=s.get(web_queue[0],headers=headers)
-    div_tag=parse_html(resp.text,'zmovie-info')
-    all_div_tag=div_tag.find_all('div')
-    download_link=all_div_tag[0].find_all('a',class_='btn btn-primary auto-download btn-lg')[0]['href']
-    print(download_link)
-    download(download_link)
+    # resp=s.get(web_queue[0],headers=headers)
+    # div_tag=parse_html(resp.text,'zmovie-info')
+    # all_div_tag=div_tag.find_all('div')
+    # download_link=all_div_tag[0].find_all('a',class_='btn btn-primary auto-download btn-lg')[0]['href']
+    # print(download_link)
+    # download(download_link)
 
-    # p
+    parser = argparse.ArgumentParser(description='Download Videos From Animehd.')
+    parser.add_argument('url',help='url e.g https://animehd47.com/naruto-dub/s1-m1/')
+    parser.add_argument('-r' ,default='720',choices=['360','480','720'])
+    parser.add_argument('-d',default='ONE',choices=['ALL','ONE'])
+    args=parser.parse_args()
+    user_resolution=args.r
+    user_download=args.d
+    user_url=args.url
 
-    # print(web_queue)
+    # TODO: Validate the url, check if parser can do that
+
+    # send request
+
+    resp = send_request(user_url)
+    if resp.status_code == requests.codes.ok:
+        pass
+    else:
+        print('Http Error Code: '+resp.status_code)
+
+
+
+
+
             
 
 
