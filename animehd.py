@@ -6,7 +6,7 @@ import click
 import requests
 import bs4
 import re
-from os.path
+import os
 from urllib.parse import urlparse
 
 
@@ -16,7 +16,7 @@ from urllib.parse import urlparse
 chunk_size=4096
 
 resolution_list=['360p-0','480p-1','720p-2']
-destination_folder=
+# destination_folder=
 
 download_type={
     'list':1,
@@ -37,7 +37,7 @@ link = "https://r3---sn-woc7ln7y.googlevideo.com/videoplayback?expire=1584367131
 file_name = "download1.mp4"
 
 def get_video_folder():
-    return path.expanduser("~")+'/Videos/'
+    return os.path.expanduser("~")+'/Videos/'
 
 def get_download_link(url_to_download_page):
     resp=send_request(url_to_download_page)
@@ -51,7 +51,11 @@ def generate_name(url,name_type):
     return o.path.split("/")[name_type]
 
 def check_exist(user_path):
-    return path.exists(user_path)
+    return os.path.exists(user_path)
+
+def create_dir(dir_name):
+    return os.mkdir(get_video_folder+dir_name)
+
 
 
 def parse_html(html,id):
