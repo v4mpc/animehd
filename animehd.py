@@ -31,17 +31,17 @@ headers={
 }
 
 
-def to_mb(byte):
-    return byte//(1024*1024)
+def to_mb(given_byte):
+    return given_byte//(1024*1024)
 link = "https://r3---sn-woc7ln7y.googlevideo.com/videoplayback?expire=1584367131&ei=-2lvXsKwE5SV1gab-oH4CA&ip=154.72.91.222&id=76486bc55a682230&itag=22&source=picasa&begin=0&requiressl=yes&mh=Rl&mm=30&mn=sn-woc7ln7y&ms=nxu&mv=u&mvi=2&pl=23&sc=yes&susc=ph&app=fife&mime=video/mp4&cnr=14&dur=1240.642&lmt=1583858785890299&mt=1584359604&sparams=expire,ei,ip,id,itag,source,requiressl,susc,app,mime,cnr,dur,lmt&sig=ADKhkGMwRQIgDbnJl1I5LMgBN8tS0qG-1ARywjXm4b7Mcu261DrbjvQCIQCRkySw8bv-4r4tjH7lsPVowX7sz_imm1HlB9UO3EXJ2A==&lsparams=mh,mm,mn,ms,mv,mvi,pl,sc&lsig=ABSNjpQwRQIgNWrB4YW61Lsf6_u8oFM4_-JhPCsJxwRp4RA6vY175rMCIQCd3edGD1bt8XCl00uXP3d2mPIPDQG0eHciQMVODQhfkw=="
 file_name = "download1.mp4"
 
 def get_video_folder():
     return os.path.expanduser("~")+'/Videos/'
 
-def get_download_link(url_to_download_page):
-    resp=send_request(url_to_download_page)
-    div_tag=parse_html(resp.text,'zmovie-info')
+def get_download_link(html):
+    # resp=send_request(url_to_download_page)
+    div_tag=parse_html(html,'zmovie-info')
     all_div_tag=div_tag.find_all('div')
     return all_div_tag[0].find_all('a',class_='btn btn-primary auto-download btn-lg')[0]['href']
 
