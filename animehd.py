@@ -76,7 +76,7 @@ def send_request(url):
 
 def download(link,file_name):
     with open(get_video_folder()+file_name, "wb") as f:
-            response = requests.get(link, stream=True)
+            response = requests.get(link, stream=True,headers=headers)
             total_length = response.headers.get('content-length')
             if total_length: # no content length header
                 dl = 0
