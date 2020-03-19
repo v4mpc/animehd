@@ -9,6 +9,9 @@ import re
 import os
 from urllib.parse import urlparse
 import argparse
+from selenium import webdriver 
+from selenium.webdriver.chrome.options import Options 
+import time 
 
 
 
@@ -57,6 +60,19 @@ def check_exist(user_path):
 def create_dir(dir_name):
     return os.mkdir(get_video_folder+dir_name)
 
+
+def start_chrome():
+    chrome_options = Options() 
+    chrome_options.add_argument("--headless") 
+    return webdriver.Chrome(executable_path=os.getcwd()+'/chromedriver',chrome_options=chrome_options)
+
+def chrome_get_download_link(browser,url):
+    browser.get(url)
+    # wait 4 secs
+    time.sleep(4)
+    return browser.find_element_by_css_selector(".auto-download").get_attribute("href")
+
+
 def get_servers(html,resolution_key):
     ul_tag=parse_html(html,'z-movie-server')
     li_list=ul_tag.find_all('li')
@@ -64,7 +80,7 @@ def get_servers(html,resolution_key):
     for li in li_list:
         server_name=li['class'][0]
         links=li.find_all('a')
-        dict_of_servers[server_name]=[f'{link["href"]}/download/{resolution[resolution_key]}' for link in links]
+        dict_of_servers[server_name]=[f'{link["href"]}download/{resolution[resolution_key]}' for link in links]
     return dict_of_servers
 
 def parse_html(html,id):
@@ -122,6 +138,8 @@ if __name__ == "__main__":
 
     resp = send_request(user_url)
     if resp.status_code == requests.codes.ok:
+        # start browser session here
+        browser=start_chrome()
         dict_of_servers=get_servers(resp.text,user_resolution)
         # lets check what the user wants
         server_name,links_to_download=dict_of_servers.popitem()
@@ -138,13 +156,18 @@ if __name__ == "__main__":
             print('Downloading One file')
             result=send_request(links_to_download[0])
             if result.status_code==requests.codes.ok:
-                # print(result.text)
-                download_link=get_download_link(result.text)
+                print(links_to_download[0])
+                download_link=chrome_get_download_link(browser,links_to_download[0])
+                print(download_link)
+                # download_link=get_download_link(result.text)
                 download(download_link,generate_name(links_to_download[0],2))
+
             # download from the first server
             # TODO: if fail try the rest before giving up
     else:
         print('Http Error Code: '+resp.status_code)
+    
+    browser.close()
 
 
 
