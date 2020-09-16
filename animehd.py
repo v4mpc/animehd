@@ -24,19 +24,25 @@ headers = {
 animes = [
     {
         'destination_path': "/home/v4mpc/Videos/boruto/",
-        'name': 'boruto'
-        'start_at': '1',
-        'link': 'https://fb.manga47.net/Boruto_Dub/Boruto_Dub_00'
+        'name': 'boruto',
+        'start_at': 1,
+        'link': 'https://fb.manga47.net/Boruto_Dub/Boruto_Dub_00',
+        'file_name': 'Boruto'
 
     },
     {
         'destination_path': "/home/v4mpc/Videos/one_piece/",
-        'name': 'one_piece'
-        'start_at': '1',
-        'link': 'https://op.manga47.net/One_Piece_Dub/0'
+        'name': 'one_piece',
+        'start_at': 90,
+        'link': 'https://op.manga47.net/One_Piece_Dub/0',
+        'file_name': 'One_piece'
 
     }
 ]
+
+
+class AnimeNotFoundError(Exception):
+    pass
 
 
 def video_exists(destination_path, file_name, link):
@@ -50,11 +56,14 @@ def video_exists(destination_path, file_name, link):
 
 def get_anime(name):
     for anime in animes:
+        # print(anime['name'])
         if anime['name'] == name:
+            # print('am herer')
             return anime
+    raise AnimeNotFoundError
 
 
-def partial_download(file_name, link):
+def partial_download(destination_path, file_name, link):
 
     # resume_headers = {'Range':'bytes=0-2000000'}
     start_at = video_exists(destination_path, file_name, link)
@@ -73,21 +82,36 @@ def partial_download(file_name, link):
                     start_at = 0
             return
 
-    click.echo(f"{file_name}...Done")
+
+@click.command()
+@click.argument('name')
+def main(name):
+    try:
+        anime = get_anime(name)
+        start_at = anime['start_at']
+        while start_at < 100:
+            file_name = f"{anime['file_name']}_0{start_at}.mp4"
+            link = f"{anime['link']}{start_at}.MP4"
+            destination_path = anime['destination_path']
+            partial_download(destination_path, file_name, link)
+            start_at += 1
+    except AnimeNotFoundError:
+        click.echo(f"Anime {name} not configured")
 
 
 if __name__ == "__main__":
+    main()
 
     # start_at = 59
     # while start_at < 100:
     #     file_name = f'One_Piece_0{start_at}.mp4'
     #     link = f'https://op.manga47.net/One_Piece_Dub/0{start_at}.MP4'
-    #     partial_download(file_name, link)
+    #     partial_download(destination_path,file_name, link)
     #     start_at += 1
 
-    start_at = 1
-    while start_at < 10:
-        file_name = f'Boruto_0{start_at}.mp4'
-        link = f'https://fb.manga47.net/Boruto_Dub/Boruto_Dub_00{start_at}.MP4'
-        partial_download(file_name, link)
-        start_at += 1
+    # start_at = 1
+    # while start_at < 10:
+    #     file_name = f'Boruto_0{start_at}.mp4'
+    #     link = f'https://fb.manga47.net/Boruto_Dub/Boruto_Dub_00{start_at}.MP4'
+    #     partial_download(destination_path,file_name, link)
+    #     start_at += 1
