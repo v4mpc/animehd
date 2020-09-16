@@ -15,16 +15,16 @@ animes = [
         'destination_path': "/home/v4mpc/Videos/boruto/",
         'name': 'boruto',
         'start_at': 1,
-        'link': 'https://fb.manga47.net/Boruto_Dub/Boruto_Dub_00',
+        'link': 'https://fb.manga47.net/Boruto_Dub/Boruto_Dub_',
         'file_name': 'Boruto'
 
     },
     {
         'destination_path': "/home/v4mpc/Videos/one_piece/",
         'name': 'one_piece',
-        'start_at': 90,
-        'link': 'https://op.manga47.net/One_Piece_Dub/0',
-        'file_name': 'One_piece'
+        'start_at': 70,
+        'link': 'https://op.manga47.net/One_Piece_Dub/',
+        'file_name': 'One_Piece'
 
     }
 ]
@@ -50,6 +50,12 @@ def get_anime(name):
             # print('am herer')
             return anime
     raise AnimeNotFoundError
+
+
+def convert_to_three_digits(number_string):
+    while len(number_string) != 3:
+        number_string = "0"+number_string
+    return number_string
 
 
 def partial_download(destination_path, file_name, link):
@@ -79,9 +85,9 @@ def main(name):
         anime = get_anime(name)
         start_at = anime['start_at']
         while start_at < 100:
-            # TODO: implement 001...010...100 in start_at for link and file_name
             file_name = f"{anime['file_name']}_0{start_at}.mp4"
-            link = f"{anime['link']}{start_at}.MP4"
+            link_counter = convert_to_three_digits(str(start_at))
+            link = f"{anime['link']}{link_counter}.MP4"
             destination_path = anime['destination_path']
             partial_download(destination_path, file_name, link)
             start_at += 1
