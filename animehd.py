@@ -10,8 +10,8 @@ import os
 chunk_size = 1024
 
 # destination_folder=
-
-destination_path = "/home/v4mpc/Videos/one_piece/"
+destination_path = "/home/v4mpc/Videos/boruto/"
+#  destination_path = "/home/v4mpc/Videos/one_piece/"
 
 
 # id=z-movie-server contains list of all servers
@@ -21,6 +21,24 @@ headers = {
 }
 
 
+animes = [
+    {
+        'destination_path': "/home/v4mpc/Videos/boruto/",
+        'name': 'boruto'
+        'start_at': '1',
+        'link': 'https://fb.manga47.net/Boruto_Dub/Boruto_Dub_00'
+
+    },
+    {
+        'destination_path': "/home/v4mpc/Videos/one_piece/",
+        'name': 'one_piece'
+        'start_at': '1',
+        'link': 'https://op.manga47.net/One_Piece_Dub/0'
+
+    }
+]
+
+
 def video_exists(destination_path, file_name, link):
     # cretera for existance
     # file_name and file_size match
@@ -28,6 +46,12 @@ def video_exists(destination_path, file_name, link):
     if file_name in file_list:
         return os.path.getsize(destination_path+file_name)
     return 0
+
+
+def get_anime(name):
+    for anime in animes:
+        if anime['name'] == name:
+            return anime
 
 
 def partial_download(file_name, link):
@@ -54,9 +78,16 @@ def partial_download(file_name, link):
 
 if __name__ == "__main__":
 
-    start_at = 57
-    while start_at < 100:
-        file_name = f'One_Piece_0{start_at}.mp4'
-        link = f'https://op.manga47.net/One_Piece_Dub/0{start_at}.MP4'
+    # start_at = 59
+    # while start_at < 100:
+    #     file_name = f'One_Piece_0{start_at}.mp4'
+    #     link = f'https://op.manga47.net/One_Piece_Dub/0{start_at}.MP4'
+    #     partial_download(file_name, link)
+    #     start_at += 1
+
+    start_at = 1
+    while start_at < 10:
+        file_name = f'Boruto_0{start_at}.mp4'
+        link = f'https://fb.manga47.net/Boruto_Dub/Boruto_Dub_00{start_at}.MP4'
         partial_download(file_name, link)
         start_at += 1
