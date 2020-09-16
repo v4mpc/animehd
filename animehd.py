@@ -6,21 +6,10 @@ import os
 
 
 # configuration params
-
 chunk_size = 1024
-
-# destination_folder=
-destination_path = "/home/v4mpc/Videos/boruto/"
-#  destination_path = "/home/v4mpc/Videos/one_piece/"
-
-
-# id=z-movie-server contains list of all servers
-
 headers = {
     'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/77.0.3865.120 Safari/537.36'
 }
-
-
 animes = [
     {
         'destination_path': "/home/v4mpc/Videos/boruto/",
@@ -101,17 +90,3 @@ def main(name):
 
 if __name__ == "__main__":
     main()
-
-    # start_at = 59
-    # while start_at < 100:
-    #     file_name = f'One_Piece_0{start_at}.mp4'
-    #     link = f'https://op.manga47.net/One_Piece_Dub/0{start_at}.MP4'
-    #     partial_download(destination_path,file_name, link)
-    #     start_at += 1
-
-    # start_at = 1
-    # while start_at < 10:
-    #     file_name = f'Boruto_0{start_at}.mp4'
-    #     link = f'https://fb.manga47.net/Boruto_Dub/Boruto_Dub_00{start_at}.MP4'
-    #     partial_download(destination_path,file_name, link)
-    #     start_at += 1
