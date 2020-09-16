@@ -79,6 +79,7 @@ def main(name):
         anime = get_anime(name)
         start_at = anime['start_at']
         while start_at < 100:
+            # TODO: implement 001...010...100 in start_at for link and file_name
             file_name = f"{anime['file_name']}_0{start_at}.mp4"
             link = f"{anime['link']}{start_at}.MP4"
             destination_path = anime['destination_path']
