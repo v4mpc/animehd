@@ -22,7 +22,7 @@ animes = [
     {
         'destination_path': "/home/v4mpc/Videos/one_piece/",
         'name': 'one_piece',
-        'start_at': 70,
+        'start_at': 99,
         'link': 'https://op.manga47.net/One_Piece_Dub/',
         'file_name': 'One_Piece'
 
@@ -84,7 +84,7 @@ def main(name):
     try:
         anime = get_anime(name)
         start_at = anime['start_at']
-        while start_at < 100:
+        while start_at < 200:
             file_name = f"{anime['file_name']}_0{start_at}.mp4"
             link_counter = convert_to_three_digits(str(start_at))
             link = f"{anime['link']}{link_counter}.MP4"
