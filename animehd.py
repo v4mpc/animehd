@@ -14,17 +14,20 @@ animes = [
     {
         'destination_path': "/home/v4mpc/Videos/boruto/",
         'name': 'boruto',
-        'start_at': 1,
+        'start_at': 70,
         'link': 'https://fb.manga47.net/Boruto_Dub/Boruto_Dub_',
-        'file_name': 'Boruto'
+        'file_name': 'Boruto',
+        'format': 'MP4'
 
     },
     {
         'destination_path': "/home/v4mpc/Videos/one_piece/",
         'name': 'one_piece',
-        'start_at': 99,
+        'start_at': 226,
         'link': 'https://op.manga47.net/One_Piece_Dub/',
-        'file_name': 'One_Piece'
+        'file_name': 'One_Piece',
+        'format': 'mp4'
+
 
     }
 ]
@@ -35,7 +38,7 @@ class AnimeNotFoundError(Exception):
 
 
 def video_exists(destination_path, file_name, link):
-    # cretera for existance
+    # criteria for existance
     # file_name and file_size match
     file_list = os.listdir(destination_path)
     if file_name in file_list:
@@ -45,9 +48,7 @@ def video_exists(destination_path, file_name, link):
 
 def get_anime(name):
     for anime in animes:
-        # print(anime['name'])
         if anime['name'] == name:
-            # print('am herer')
             return anime
     raise AnimeNotFoundError
 
@@ -84,15 +85,18 @@ def main(name):
     try:
         anime = get_anime(name)
         start_at = anime['start_at']
-        while start_at < 200:
+        while start_at < 400:
             file_name = f"{anime['file_name']}_0{start_at}.mp4"
             link_counter = convert_to_three_digits(str(start_at))
-            link = f"{anime['link']}{link_counter}.MP4"
+            link = f"{anime['link']}{link_counter}.{anime['format']}"
+            print(link)
             destination_path = anime['destination_path']
             partial_download(destination_path, file_name, link)
             start_at += 1
     except AnimeNotFoundError:
         click.echo(f"Anime {name} not configured")
+
+        # https://fb.manga47.net/Boruto_Dub/Boruto_Dub_053.mp4
 
 
 if __name__ == "__main__":
