@@ -1,4 +1,4 @@
-#!/usr/bin/python3
+#!/home/v4mpc/.local/share/virtualenvs/animehd-QGHCqRyK/bin/python3
 
 import requests
 import click
@@ -17,18 +17,32 @@ animes = [
         'start_at': 70,
         'link': 'https://fb.manga47.net/Boruto_Dub/Boruto_Dub_',
         'file_name': 'Boruto',
-        'format': 'MP4'
+        'format': 'mp4'
 
     },
     {
         'destination_path': "/home/v4mpc/Videos/one_piece/",
         'name': 'one_piece',
-        'start_at': 226,
+        'start_at': 140,
         'link': 'https://op.manga47.net/One_Piece_Dub/',
         'file_name': 'One_Piece',
+        'format': 'MP4'
+    },
+    {
+        'destination_path': "/home/v4mpc/Videos/black_clover/",
+        'name': 'black_clover',
+        'start_at': 144,
+        'link': 'https://fb.manga47.net/Black_Clover_TV_Sub/Black_Clover_TV_Sub_',
+        'file_name': 'Black_Clover',
         'format': 'mp4'
-
-
+    },
+    {
+        'destination_path': "/home/v4mpc/Videos/jujustu_kaisen/",
+        'name': 'jujustu_kaisen',
+        'start_at': 2,
+        'link': 'https://20.manga47.net/Jujutsu_Kaisen_TV/Jujutsu_Kaisen_TV_',
+        'file_name': 'Jujustu_Kaisen',
+        'format': 'mp4'
     }
 ]
 
