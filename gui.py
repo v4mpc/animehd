@@ -5,6 +5,8 @@ import sys
 import json
 import time
 
+from dialog import Ui_Dialog
+
 
 class WorkerKilledException(Exception):
     pass
@@ -54,6 +56,10 @@ class WorkerSignals(QObject):
     progress = pyqtSignal(int, int)
 
 
+class DialogSignal(QObject):
+    data = pyqtSignal(dict)
+
+
 class Worker(QRunnable):
     def __init__(self, job_id):
         super().__init__()
@@ -80,6 +86,29 @@ class Worker(QRunnable):
         self.is_killed = True
 
 
+class AddDialog(QtWidgets.QDialog):
+
+    def __init__(self, parent=None):
+        super().__init__(parent)
+        self.ui = Ui_Dialog()
+        self.ui.setupUi(self)
+        self.signals = DialogSignal()
+
+    def accept(self):
+        if True:
+            print('dialog Accepted')
+            self.signals.data.emit({
+                'name': self.ui.name_line_edit.text(),
+                'destination': self.ui.destination_line_edit.text(),
+                'file_name': self.ui.file_name_line_edit.text(),
+                'link': self.ui.link_line_edit.text(),
+                'format': self.ui.format_line_edit.text(),
+                'start_at': self.ui.start_at_line_edit.text(),
+                'end_at': self.ui.end_at_line_edit.text()
+            })
+            self.done(QtWidgets.QDialog.Accepted)
+
+
 class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
     def __init__(self):
         super().__init__()
@@ -98,12 +127,20 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         self.model = TableModel(self.data)
         self.table_view.setModel(self.model)
 
-        self.add_push_button.pressed.connect(self.add)
+        self.add_push_button.pressed.connect(self.on_add_button_clicked)
         self.remove_push_button.pressed.connect(self.remove)
         self.start_push_button.pressed.connect(self.start)
         self.pause_push_button.pressed.connect(self.pause)
         self.worker_progress = {}
         self.threadpool = QThreadPool()
+
+    def on_add_button_clicked(self):
+        dlg = AddDialog(self)
+        dlg.signals.data.connect(self.get_data_from_dialog)
+        dlg.exec()
+
+    def get_data_from_dialog(self, data):
+        print(data)
 
     def update_progress(self, job_id, progress):
         row = job_id
