@@ -24,6 +24,12 @@ class TableModel(QtCore.QAbstractTableModel):
     def __init__(self, data):
         super().__init__()
         self._data = data
+        self.header = [
+            '#',
+            'Name',
+            'Progress',
+            'Status'
+        ]
 
     def data(self, index, role):
         if role == Qt.DisplayRole:
@@ -34,6 +40,11 @@ class TableModel(QtCore.QAbstractTableModel):
 
     def columnCount(self, index):
         return len(self._data[0])
+
+    def headerData(self, section, orientation, role):
+        if role == Qt.DisplayRole:
+            # return self.header[]
+            print(section)
 
 
 class WorkerSignals(QObject):
