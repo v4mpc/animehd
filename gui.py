@@ -108,13 +108,14 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
     def update_progress(self, job_id, progress):
         row = job_id
         index = self.model.createIndex(row, 0)
-        edit_index = self.model.createIndex(row, 2)
+        start_index = self.model.createIndex(row, 2)
+        end_index = self.model.createIndex(row, 2)
 
         old_value = self.model.videos[index.row()]
         print(old_value)
         self.model.videos[index.row()] = [old_value[0],
                                           old_value[1], progress, 'Downloading']
-        self.model.dataChanged.emit(edit_index, edit_index, [Qt.DisplayRole])
+        self.model.dataChanged.emit(index, end_index, [Qt.DisplayRole])
         # self.model.layoutChanged.emit()
 
     def remove(self):
