@@ -70,7 +70,7 @@ class Worker(QRunnable):
                 self.progress += 10
                 self.signals.progress.emit(self.job_id, self.progress)
                 print('Progress emited')
-                time.sleep(2)
+                time.sleep(1)
                 if self.is_killed:
                     raise WorkerKilledException
         except WorkerKilledException:
@@ -157,7 +157,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         self.model.videos.append([5, 'Naruto', 0, 'Paused'])
         self.model.layoutChanged.emit()
 
-        worker = Worker(4)
+        worker = Worker(len(self.model.videos)-1)
         worker.signals.progress.connect(self.update_progress)
         self.threadpool.start(worker)
 
