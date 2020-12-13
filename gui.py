@@ -3,7 +3,7 @@ from PyQt5.QtCore import Qt, QObject, QRunnable, QThreadPool, QTimer, pyqtSignal
 from MainWindow import Ui_MainWindow
 import sys
 import json
-import time
+
 
 from main_dialog import AddDialog
 from worker import WorkerKilledException, WorkerSignals, Worker
