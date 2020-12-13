@@ -6,6 +6,10 @@ import json
 import time
 
 
+class WorkerKilledException(Exception):
+    pass
+
+
 class ProgressDelegate(QtWidgets.QStyledItemDelegate):
     def paint(self, painter, option, index):
         progress = index.data()
@@ -22,8 +26,8 @@ class ProgressDelegate(QtWidgets.QStyledItemDelegate):
 
 class TableModel(QtCore.QAbstractTableModel):
     def __init__(self, data):
-        super().__init__()
-        self._data = data
+        super(TableModel, self).__init__()
+        self.videos = data
         self.header = [
             '#',
             'Name',
@@ -33,40 +37,42 @@ class TableModel(QtCore.QAbstractTableModel):
 
     def data(self, index, role):
         if role == Qt.DisplayRole:
-            return self._data[index.row()][index.column()]
+            return self.videos[index.row()][index.column()]
 
     def rowCount(self, index):
-        return len(self._data)
+        return len(self.videos)
 
     def columnCount(self, index):
-        return len(self._data[0])
+        return len(self.videos[0])
 
     def headerData(self, section, orientation, role):
-        if role == Qt.DisplayRole:
-            # return self.header[]
-            print(section)
+        if role == Qt.DisplayRole and orientation == Qt.Horizontal:
+            return self.header[section]
 
 
 class WorkerSignals(QObject):
-    progress = pyqtSignal(int)
+    progress = pyqtSignal(int, int)
 
 
 class Worker(QRunnable):
-    def __init__(self):
+    def __init__(self, job_id):
         super().__init__()
         self.signals = WorkerSignals()
         self.is_killed = False
         self.is_paused = False
         self.progress = 0
+        self.job_id = job_id
 
     @pyqtSlot()
     def run(self):
         try:
-            self.progress += 10
-            self.signals.progress.emit(self.progress)
-            time.sleep(2)
-            if self.is_killed:
-                raise WorkerKilledException
+            while self.progress < 100:
+                self.progress += 10
+                self.signals.progress.emit(self.job_id, self.progress)
+                print('Progress emited')
+                time.sleep(2)
+                if self.is_killed:
+                    raise WorkerKilledException
         except WorkerKilledException:
             pass
 
@@ -78,14 +84,15 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
     def __init__(self):
         super().__init__()
         self.setupUi(self)
-
         self.delegate = ProgressDelegate(self.table_view)
-        self.table_view.setItemDelegateForColumn(1, self.delegate)
+        self.table_view.setSelectionBehavior(
+            QtWidgets.QTableView.SelectRows)
+        self.table_view.setItemDelegateForColumn(2, self.delegate)
         self.data = [
-            [1, 90, 3, 4],
-            [1, 2, 3, 4],
-            [1, 2, 3, 4],
-            [1, 2, 3, 4]
+            [1, 'Jujustu Kaisen episode 5', 30, 'Downloading'],
+            [2, 2, 3, 'Paused'],
+            [3, 2, 3, 'Paused'],
+            [4, 2, 3, 'Paused']
 
         ]
         self.model = TableModel(self.data)
@@ -95,12 +102,20 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         self.remove_push_button.pressed.connect(self.remove)
         self.start_push_button.pressed.connect(self.start)
         self.pause_push_button.pressed.connect(self.pause)
+        self.worker_progress = {}
         self.threadpool = QThreadPool()
 
-    def update_progress(self, progress):
-        old_value = self.model.videos[0]
-        self.model.videos[0] = [old_value[0], progress]
-        self.model.dataChanged.emit(0, 0)
+    def update_progress(self, job_id, progress):
+        row = job_id
+        index = self.model.createIndex(row, 0)
+        edit_index = self.model.createIndex(row, 2)
+
+        old_value = self.model.videos[index.row()]
+        print(old_value)
+        self.model.videos[index.row()] = [old_value[0],
+                                          old_value[1], progress, 'Downloading']
+        self.model.dataChanged.emit(edit_index, edit_index, [Qt.DisplayRole])
+        # self.model.layoutChanged.emit()
 
     def remove(self):
         print('Remove Clicked')
@@ -138,9 +153,10 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
             self.save()
 
     def add(self):
-        self.model.videos.append(['esg', 41])
+        self.model.videos.append([5, 'Naruto', 0, 'Paused'])
         self.model.layoutChanged.emit()
-        worker = Worker()
+
+        worker = Worker(4)
         worker.signals.progress.connect(self.update_progress)
         self.threadpool.start(worker)
 
