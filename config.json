@@ -1,0 +1,49 @@
+{
+    "video_home": "/home/v4mpc/",
+    "chunk_size": 1024,
+    "headers": {
+        "User-Agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/77.0.3865.120 Safari/537.36"
+    },
+    "animes": [
+        {
+            "destination_path": "/home/v4mpc/Videos/boruto/",
+            "name": "boruto",
+            "start_at": 70,
+            "link": "https: //fb.manga47.net/Boruto_Dub/Boruto_Dub_",
+            "file_name": "Boruto",
+            "format": "mp4"
+        },
+        {
+            "destination_path": "/home/v4mpc/Videos/one_piece/",
+            "name": "one_piece",
+            "start_at": 266,
+            "link": "https: //on.manga47.net/One_Piece_Dub/",
+            "file_name": "One_Piece",
+            "format": "mp4"
+        },
+        {
+            "destination_path": "/home/v4mpc/Videos/black_clover/",
+            "name": "black_clover",
+            "start_at": 144,
+            "link": "https: //fb.manga47.net/Black_Clover_TV_Sub/Black_Clover_TV_Sub_",
+            "file_name": "Black_Clover",
+            "format": "mp4"
+        },
+        {
+            "destination_path": "/home/v4mpc/Videos/jujustu_kaisen/",
+            "name": "jujustu_kaisen",
+            "start_at": 2,
+            "link": "https: //20.manga47.net/Jujutsu_Kaisen_TV/Jujutsu_Kaisen_TV_",
+            "file_name": "Jujustu_Kaisen",
+            "format": "mp4"
+        },
+        {
+            "destination_path": "/home/v4mpc/Videos/doctor_stone/",
+            "name": "doctor_stone",
+            "start_at": 1,
+            "link": "https: //20.manga47.net/Dr_Stone_Stone_Wars/Dr_Stone_Stone_Wars_Dub_",
+            "file_name": "Doctor_Stone",
+            "format": "mp4"
+        }
+    ]
+}

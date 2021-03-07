@@ -1,0 +1,9 @@
+animehd.py
+pyproject.toml
+setup.py
+animehd.egg-info/PKG-INFO
+animehd.egg-info/SOURCES.txt
+animehd.egg-info/dependency_links.txt
+animehd.egg-info/entry_points.txt
+animehd.egg-info/requires.txt
+animehd.egg-info/top_level.txt
