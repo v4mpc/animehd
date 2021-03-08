@@ -3,6 +3,7 @@
 import requests
 import click
 import os
+import json
 
 
 # configuration params
@@ -49,6 +50,11 @@ animes = [
 
 class AnimeNotFoundError(Exception):
     pass
+
+
+def load_config():
+    with open('config.json') as json_file:
+        config = json.load(json_file)
 
 
 def video_exists(destination_path, file_name, link):

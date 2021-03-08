@@ -1,9 +1,0 @@
-animehd.py
-pyproject.toml
-setup.py
-/home/v4mpc/repo/animehd/reqlib-metadata/animehd.egg-info/PKG-INFO
-/home/v4mpc/repo/animehd/reqlib-metadata/animehd.egg-info/SOURCES.txt
-/home/v4mpc/repo/animehd/reqlib-metadata/animehd.egg-info/dependency_links.txt
-/home/v4mpc/repo/animehd/reqlib-metadata/animehd.egg-info/entry_points.txt
-/home/v4mpc/repo/animehd/reqlib-metadata/animehd.egg-info/requires.txt
-/home/v4mpc/repo/animehd/reqlib-metadata/animehd.egg-info/top_level.txt
